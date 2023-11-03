@@ -1,5 +1,6 @@
 package com.trilok.productservice.services;
 
+import com.trilok.productservice.models.Category;
 import com.trilok.productservice.models.Product;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -8,7 +9,7 @@ import java.util.Optional;
 
 public interface CategoryService {
 
-    List<String> getAllCategories();
+    List<Category> getAllCategories();
 
     Optional<List<Product>> getProductsInCategory(@PathVariable("categoryId") String categoryId);
 }

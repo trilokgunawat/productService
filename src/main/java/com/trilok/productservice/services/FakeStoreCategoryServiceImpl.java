@@ -32,9 +32,15 @@ public class FakeStoreCategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<String> getAllCategories() {
+    public List<Category> getAllCategories() {
         List<String> response = fakeStoreCategoryClient.getAllCategories();
-        return response;
+        List<Category> answer = new ArrayList<>();
+        for(String r : response){
+            Category category = new Category();
+            category.setName(r);
+            answer.add(category);
+        }
+        return answer;
     }
 
     @Override

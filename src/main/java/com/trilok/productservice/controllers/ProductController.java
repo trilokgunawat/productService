@@ -5,6 +5,7 @@ import com.trilok.productservice.dtos.ProductDto;
 import com.trilok.productservice.exceptions.NotFoundException;
 import com.trilok.productservice.models.Category;
 import com.trilok.productservice.models.Product;
+import com.trilok.productservice.repositories.ProductRepository;
 import com.trilok.productservice.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,12 @@ import java.util.Optional;
 @RequestMapping("/products")
 public class ProductController {
     ProductService productService;
+    ProductRepository productRepository;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductRepository productRepository) {
+
         this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     @GetMapping()
@@ -48,10 +52,19 @@ public class ProductController {
     }
     @PostMapping()
     public ResponseEntity<Product> addNewProduct(@RequestBody ProductDto productDto){
-        Product newProduct = productService.addNewProduct(productDto);
+
+//        Product newProduct = productService.addNewProduct(productDto);
+        Product newProduct = new Product();
+        newProduct.setDescription(productDto.getDescription());
+        newProduct.setTitle(productDto.getTitle());
+        newProduct.setImageUrl(productDto.getImage());
+        newProduct.setPrice(productDto.getPrice());
+
+       productRepository.save(newProduct);
 
         ResponseEntity<Product> response = new ResponseEntity<>(newProduct,
                                                                 HttpStatus.OK);
+
 
         return response;
     }

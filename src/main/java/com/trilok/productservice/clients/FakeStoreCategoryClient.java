@@ -1,5 +1,6 @@
 package com.trilok.productservice.clients;
 
+import com.trilok.productservice.models.Category;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class FakeStoreCategoryClient {
         ResponseEntity<String[]> response = restTemplate.getForEntity(
                 "https://fakestoreapi.com/products/categories",
                 String[].class);
-        return Arrays.asList(response.getBody());
+        return List.of(response.getBody());
     }
 
     public Optional<List<FakeStoreProductDto>> getProductsInCategory(String categoryName){

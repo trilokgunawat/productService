@@ -6,6 +6,8 @@ import com.trilok.productservice.models.Product;
 import com.trilok.productservice.services.CategoryService;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +25,13 @@ import java.util.Optional;
 
 public class CategoryController {
     CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
+    @Autowired
+    public CategoryController( CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
     @GetMapping()
-    public ResponseEntity<List<String >> getAllCategories(){
+    public ResponseEntity<List<Category >> getAllCategories(){
         ResponseEntity response = new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
 
         return response;
