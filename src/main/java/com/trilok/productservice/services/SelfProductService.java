@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service("selfProductService")
 public class SelfProductService implements ProductService{
     ProductRepository productRepository;
 
@@ -25,7 +25,11 @@ public class SelfProductService implements ProductService{
 
     @Override
     public Optional<Product> getSingleProduct(Long productId) throws NotFoundException {
-        return Optional.ofNullable(productRepository.findProductById(productId));
+        Product product = productRepository.findProductById(productId);
+        if(product == null ){
+            throw new NotFoundException("Product Not Exist");
+        }
+        return Optional.of(product);
     }
 
     @Override

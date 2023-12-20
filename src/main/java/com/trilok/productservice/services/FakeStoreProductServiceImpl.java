@@ -7,18 +7,20 @@ import com.trilok.productservice.dtos.ProductDto;
 import com.trilok.productservice.exceptions.NotFoundException;
 import com.trilok.productservice.models.Category;
 import com.trilok.productservice.models.Product;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
-@Service
+@Service("fakeProductService")
 public class FakeStoreProductServiceImpl implements ProductService {
     private FakeStoreProductClient fakeStoreClient;
 
-    public FakeStoreProductServiceImpl( FakeStoreProductClient fakeStoreClient) {
+    public FakeStoreProductServiceImpl(FakeStoreProductClient fakeStoreClient, RedisTemplate<String, Object> redisTemplate) {
         this.fakeStoreClient = fakeStoreClient;
+
     }
 
     private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto productDto){
@@ -48,7 +50,7 @@ public class FakeStoreProductServiceImpl implements ProductService {
 
     @Override
     public Optional<Product> getSingleProduct(Long productId) throws NotFoundException {
-//
+
         Optional<FakeStoreProductDto> fakeStoreProductDto = fakeStoreClient.getSingleProduct(productId);
         if (fakeStoreProductDto.isPresent()) {
             return Optional.of(convertFakeStoreProductDtoToProduct(fakeStoreProductDto.get()));
