@@ -11,5 +11,5 @@ public interface CategoryService {
 
     List<Category> getAllCategories();
 
-    Optional<List<Product>> getProductsInCategory(@PathVariable("categoryId") String categoryId);
+    List<Product> getProductsInCategory(@PathVariable("categoryId") String categoryId);
 }

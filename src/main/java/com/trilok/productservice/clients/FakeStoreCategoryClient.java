@@ -25,12 +25,12 @@ public class FakeStoreCategoryClient {
         return List.of(response.getBody());
     }
 
-    public Optional<List<FakeStoreProductDto>> getProductsInCategory(String categoryName){
+    public List<FakeStoreProductDto> getProductsInCategory(String categoryName){
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto[]> response =  restTemplate.getForEntity(
                                 "https://fakestoreapi.com/products/category/{category_name}",
                                     FakeStoreProductDto[].class, categoryName);
-        return Optional.ofNullable(Arrays.asList(response.getBody()));
+        return Arrays.asList(response.getBody());
 
     }
 

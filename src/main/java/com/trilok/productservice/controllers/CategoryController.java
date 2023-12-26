@@ -40,11 +40,11 @@ public class CategoryController {
    @GetMapping("/{categoryId}")
     public ResponseEntity<List<Product>> getProductsInCategory(@PathVariable("categoryId") String categoryId)
            throws NotFoundException {
-       Optional<List<Product>> productList = categoryService.getProductsInCategory(categoryId);
+       List<Product> productList = categoryService.getProductsInCategory(categoryId);
        if(productList.isEmpty()){
-           throw new NotFoundException("Category not found " + categoryId);
+           throw new NotFoundException("No product in this category with categoryId " + categoryId);
        }
-        ResponseEntity response = new ResponseEntity<>(categoryService.getProductsInCategory(categoryId).get(),
+        ResponseEntity response = new ResponseEntity<>(categoryService.getProductsInCategory(categoryId),
                                                     HttpStatus.OK);
         return response;
     }

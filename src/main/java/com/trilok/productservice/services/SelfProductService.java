@@ -62,8 +62,8 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Boolean deleteProduct(Long productId) {
+    public Optional<Product> deleteProduct(Long productId) {
         Optional<Product> product = productRepository.findById(productId);
-        return product.isPresent();
+        return product;
     }
 }

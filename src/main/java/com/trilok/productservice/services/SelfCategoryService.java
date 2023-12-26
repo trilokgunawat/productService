@@ -26,8 +26,8 @@ public class SelfCategoryService implements CategoryService{
     }
 
     @Override
-    public Optional<List<Product>> getProductsInCategory(String categoryId) {
+    public List<Product> getProductsInCategory(String categoryId) {
 
-        return Optional.ofNullable(productRepository.findProductsByCategory_Name(categoryId));
+        return productRepository.findProductsByCategory_Name(categoryId);
     }
 }

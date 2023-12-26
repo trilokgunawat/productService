@@ -7,20 +7,22 @@ import com.trilok.productservice.dtos.ProductDto;
 import com.trilok.productservice.exceptions.NotFoundException;
 import com.trilok.productservice.models.Category;
 import com.trilok.productservice.models.Product;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 
 @Service("fakeProductService")
 public class FakeStoreProductServiceImpl implements ProductService {
     private FakeStoreProductClient fakeStoreClient;
+    private Map<Long,Object> fakeStoreProducts = new HashMap<>();
+    private RedisTemplate<Long, Object>  redisTemplate;
 
-    public FakeStoreProductServiceImpl(FakeStoreProductClient fakeStoreClient, RedisTemplate<String, Object> redisTemplate) {
+    public FakeStoreProductServiceImpl(FakeStoreProductClient fakeStoreClient, RedisTemplate<Long,Object> redisTemplate) {
         this.fakeStoreClient = fakeStoreClient;
-
+        this.redisTemplate = redisTemplate;
     }
 
     private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto productDto){
@@ -49,32 +51,47 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<Product> getSingleProduct(Long productId) throws NotFoundException {
+    public Optional<Product> getSingleProduct(Long productId) {
+        FakeStoreProductDto fakeStoreProductDto = (FakeStoreProductDto) redisTemplate
+                                                    .opsForHash()
+                                                    .get(productId,"PRODUCTS");
+        if(fakeStoreProductDto!=null){
+            return Optional.of(convertFakeStoreProductDtoToProduct(fakeStoreProductDto));
+        }
+//        if(fakeStoreProducts.containsKey(productId)){
+//            return Optional.of(convertFakeStoreProductDtoToProduct((FakeStoreProductDto) fakeStoreProducts.get(productId)));
+//        }
+        Optional<FakeStoreProductDto> fakeStoreProductDtoOptional = fakeStoreClient.getSingleProduct(productId);
 
-        Optional<FakeStoreProductDto> fakeStoreProductDto = fakeStoreClient.getSingleProduct(productId);
-        if (fakeStoreProductDto.isPresent()) {
-            return Optional.of(convertFakeStoreProductDtoToProduct(fakeStoreProductDto.get()));
+        if (fakeStoreProductDtoOptional.isPresent()) {
+            redisTemplate.opsForHash().put(productId, "PRODUCTS", fakeStoreProductDtoOptional.get());
+//            fakeStoreProducts.put(productId,fakeStoreProductDtoOptional.get());
+            return Optional.of(convertFakeStoreProductDtoToProduct(fakeStoreProductDtoOptional.get()));
         }
         return Optional.empty();
     }
 
     @Override
     public Product addNewProduct(ProductDto productDto) {
-        FakeStoreProductDto productDto1 = fakeStoreClient.addNewProduct(productDto);
-        return convertFakeStoreProductDtoToProduct(productDto1);
+        FakeStoreProductDto fakeStoreProductDto = fakeStoreClient.addNewProduct(productDto);
+        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }
 
     @Override
     public Product updateProduct(Long productId, ProductDto productDto) {
 
         FakeStoreProductDto fakeStoreProductDto = fakeStoreClient.updateProduct(productId, productDto );
+
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }
 
     @Override
-    public Boolean deleteProduct(Long productId) {
-
-        return null;
+    public Optional<Product> deleteProduct(Long productId) {
+        Optional<FakeStoreProductDto> fakeStoreProductDto = fakeStoreClient.deleteProduct(productId);
+        if(fakeStoreProductDto.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.of(convertFakeStoreProductDtoToProduct(fakeStoreProductDto.get()));
     }
 
 }

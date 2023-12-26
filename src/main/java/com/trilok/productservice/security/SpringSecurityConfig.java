@@ -14,8 +14,9 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/products").hasAuthority("ADMIN")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/products").hasAuthority("ADMIN")
+//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 ) // only allow a person who has logged in to be able to access any url
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt

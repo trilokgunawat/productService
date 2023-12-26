@@ -44,15 +44,13 @@ public class FakeStoreCategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Optional<List<Product>> getProductsInCategory(String categoryName) {
-        Optional<List<FakeStoreProductDto>> response =  fakeStoreCategoryClient.getProductsInCategory(categoryName);
-        if(response.isEmpty()){
-            return Optional.empty();
-        }
+    public List<Product> getProductsInCategory(String categoryName) {
+        List<FakeStoreProductDto> response =  fakeStoreCategoryClient.getProductsInCategory(categoryName);
+
         List<Product> answer = new ArrayList<>();
-        for(FakeStoreProductDto f : response.get()){
+        for(FakeStoreProductDto f : response){
             answer.add(convertFakeStoreProductDtoToProduct(f));
         }
-        return Optional.of(answer);
+        return answer;
     }
 }

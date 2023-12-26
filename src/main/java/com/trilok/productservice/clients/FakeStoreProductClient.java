@@ -43,7 +43,7 @@ public class FakeStoreProductClient {
         return Arrays.asList(l.getBody());
     };
 
-    public Optional<FakeStoreProductDto> getSingleProduct(Long productId) throws NotFoundException {
+    public Optional<FakeStoreProductDto> getSingleProduct(Long productId) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response =  restTemplate.getForEntity("https://fakestoreapi.com/products/{id}",
                 FakeStoreProductDto.class,
@@ -70,13 +70,14 @@ public class FakeStoreProductClient {
         return response.getBody();
     };
 
-    public FakeStoreProductDto deleteProduct(Long productId){
+    public Optional<FakeStoreProductDto> deleteProduct(Long productId){
         ResponseEntity<FakeStoreProductDto> response = requestForEntity(HttpMethod.DELETE,
-                                                                "https://fakestoreapi.com/products/6",
+                                                                "https://fakestoreapi.com/products/{productId}",
                                                                     null,
                                                                     FakeStoreProductDto.class,
                                                                     productId);
-        return response.getBody();
+
+        return Optional.ofNullable(response.getBody());
     };
 
 

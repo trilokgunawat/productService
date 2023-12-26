@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController {
+public class    ProductController {
     private ProductService productService;
     private ProductRepository productRepository;
     private AuthenticationClient authenticationClient;
@@ -39,8 +39,7 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getAllProducts(@Nullable @RequestHeader("AUTH_TOKEN") String token,
-                                                        @Nullable @RequestHeader("USER_ID") Long userId){
+    public ResponseEntity<List<Product>> getAllProducts(){
         // check if token exists
 //        if (token == null || userId == null){
 //            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -74,30 +73,29 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getSingleProduct(@PathVariable("productId") Long productId) throws NotFoundException {
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("auth_token", "noaccess4uheyhey");
+
         Optional<Product> productOptional = productService.getSingleProduct(productId);
         if(productOptional.isEmpty()){
-            throw new NotFoundException("No product with product id; " + productId);
+            throw new NotFoundException("No product with product id: " + productId);
         }
         ResponseEntity<Product> response = new ResponseEntity<>(
                                                         productService.getSingleProduct(productId).get(),
-                                                        headers,
-                                                        HttpStatus.NOT_FOUND
+
+                                                        HttpStatus.OK
                                                         );
         return response;
     }
     @PostMapping()
     public ResponseEntity<Product> addNewProduct(@RequestBody ProductDto productDto){
 
-//        Product newProduct = productService.addNewProduct(productDto);
-        Product newProduct = new Product();
-        newProduct.setDescription(productDto.getDescription());
-        newProduct.setTitle(productDto.getTitle());
-        newProduct.setImageUrl(productDto.getImage());
-        newProduct.setPrice(productDto.getPrice());
-
-       productRepository.save(newProduct);
+        Product newProduct = productService.addNewProduct(productDto);
+//        Product newProduct = new Product();
+//        newProduct.setDescription(productDto.getDescription());
+//        newProduct.setTitle(productDto.getTitle());
+//        newProduct.setImageUrl(productDto.getImage());
+//        newProduct.setPrice(productDto.getPrice());
+//
+//       productRepository.save(newProduct);
 
         ResponseEntity<Product> response = new ResponseEntity<>(newProduct,
                                                                 HttpStatus.OK);
@@ -115,7 +113,12 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    public String deleteProduct(@PathVariable("productId") Long productId){
-        return "delete product" + productId;
+    public ResponseEntity<Product> deleteProduct(@PathVariable("productId") Long productId) throws NotFoundException {
+        Optional<Product> product = productService.deleteProduct(productId);
+        if(product.isEmpty()){
+            throw new NotFoundException("No product with product id: " + productId);
+        }
+        ResponseEntity<Product> response = new ResponseEntity<>(product.get(), HttpStatus.OK);
+        return response;
     }
 }
