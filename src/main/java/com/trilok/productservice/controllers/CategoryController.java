@@ -26,7 +26,7 @@ import java.util.Optional;
 public class CategoryController {
     CategoryService categoryService;
     @Autowired
-    public CategoryController( CategoryService categoryService) {
+    public CategoryController(@Qualifier("fakeCategoryService") CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

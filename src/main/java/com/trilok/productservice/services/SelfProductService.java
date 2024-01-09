@@ -5,17 +5,17 @@ import com.trilok.productservice.exceptions.NotFoundException;
 import com.trilok.productservice.models.Category;
 import com.trilok.productservice.models.Product;
 import com.trilok.productservice.repositories.ProductRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 @Service("selfProductService")
 public class SelfProductService implements ProductService{
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     public SelfProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+
     }
 
     @Override
@@ -42,7 +42,6 @@ public class SelfProductService implements ProductService{
         Category category = new Category();
         category.setName(productDto.getCategory());
         product.setCategory(category);
-
 
         return productRepository.save(product);
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Service("selfCategoryService")
 public class SelfCategoryService implements CategoryService{
     CategoryRepository categoryRepository;
     private final ProductRepository productRepository;

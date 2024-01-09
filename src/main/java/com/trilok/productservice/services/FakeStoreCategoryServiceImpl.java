@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("fakeCategoryService")
 public class FakeStoreCategoryServiceImpl implements CategoryService{
     FakeStoreCategoryClient fakeStoreCategoryClient;
 

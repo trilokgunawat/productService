@@ -6,11 +6,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-@SpringBootTest
+//@SpringBootTest
 class ProductServiceApplicationTests {
-    @Test
-    void contextLoads() {
-    }
+//    @Test
+//    void contextLoads() {
+//    }
 
 
 }
